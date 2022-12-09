@@ -12,13 +12,16 @@ async fn health(_: HttpRequest) -> HttpResponse {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    println!("starting on {}:{}", "0.0.0.0", 8000);
+
     HttpServer::new(|| {
         App::new()
             .route("/", web::get().to(greet))
             .route("/{name}", web::get().to(greet))
             .service(health)
     })
-    .bind(("127.0.0.1", 8080))?
-    .run()
+    .bind(("0.0.0.0", 8080))?
+    .run()    
     .await
+
 }
