@@ -1,27 +1,25 @@
 use actix_web::{get, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
+use std::{thread, time};
 
-async fn greet(req: HttpRequest) -> impl Responder {
-    let name = req.match_info().get("name").unwrap_or("World");
-    format!("Hello {}!", &name)
+#[get("/ping")]
+async fn ping(_: HttpRequest) -> HttpResponse {
+    HttpResponse::Ok().body("pong")
 }
 
-#[get("/")]
-async fn health(_: HttpRequest) -> HttpResponse {
-    HttpResponse::Ok().body("")
+#[get("/delayed")]
+async fn delayed(_: HttpRequest) -> HttpResponse {
+    // TODO: randomize it; use async delay
+    let ten_millis = time::Duration::from_millis(10);
+    thread::sleep(ten_millis);
+    HttpResponse::Ok().body("pong")
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("starting on {}:{}", "0.0.0.0", 8000);
+    println!("starting on {}:{}", "0.0.0.0", 8080);
 
-    HttpServer::new(|| {
-        App::new()
-            .route("/", web::get().to(greet))
-            .route("/{name}", web::get().to(greet))
-            .service(health)
-    })
-    .bind(("0.0.0.0", 8080))?
-    .run()    
-    .await
-
+    HttpServer::new(|| App::new().service(ping).service(delayed))
+        .bind(("0.0.0.0", 8080))?
+        .run()
+        .await
 }

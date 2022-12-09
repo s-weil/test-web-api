@@ -5,7 +5,8 @@ A list of very basic web-api, meant for testing performance of simple and more t
 ### catalogue
 
     * RUST:
-        - [actix web](./rust/actix-api/)
+        - [actix web](./rust/actix-api/): run `cargo run --release`
         
     * PYTHON:
-        - [FastApi](./python/fast-api/)
+        - [FastApi](./python/fast-api/): run
+            `uvicorn main:app --reload`
